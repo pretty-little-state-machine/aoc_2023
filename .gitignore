@@ -21,3 +21,5 @@ Cargo.lock
 # RustRover
 .idea/
 
+# The Advent of Code author asks that we do NOT commit puzzle input
+input/*.txt
