@@ -1,22 +1,15 @@
+use rayon::prelude::*;
+
 pub fn run(input: &str) -> (String, String) {
     (part_1(input).to_string(), part_2(input).to_string())
 }
 
 fn part_1(input: &str) -> usize {
-    let mut total = 0;
-    for line in input.lines() {
-        total += get_line_value(line)
-    }
-    total
+    input.par_lines().map(get_line_value).sum()
 }
 
 fn part_2(input: &str) -> usize {
-    let mut total = 0;
-    for line in input.lines() {
-        let cleaned_line = replace_words(line);
-        total += get_line_value(cleaned_line.as_str());
-    }
-    total
+    input.par_lines().map(|l| get_line_value(replace_words(l).as_str())).sum()
 }
 
 /// Finds the first and last digits within a line and creates a two-digit number from them.
