@@ -10,7 +10,7 @@ Only days with both solutions are shown.
 | Day       | Result  | 
 |-----------|---------|
 | 01        | 561.1µs |
-| 01        | 195.5µs |
+| 02        | 195.5µs |
 | **Total** | 756.6µs |
 
 ## Lessons Learned
