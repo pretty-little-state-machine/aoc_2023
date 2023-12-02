@@ -8,7 +8,7 @@ use std::time::Duration;
 
 type DayResult = (Option<Duration>, (String, Duration), (String, Duration));
 
-fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) {
+fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) -> Duration {
     // Load the file before calling the function for accurate timing
     let contents =
         fs::read_to_string(format!("./input/day_{:0>2}.txt", day)).expect("File not found.");
@@ -20,9 +20,9 @@ fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) {
     }
 
     let title = match color {
-        Red => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").bright_red(),
-        Green => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").bright_green(),
-        _ => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").white(),
+        Red => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").bright_red(),
+        Green => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").bright_green(),
+        _ => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").white(),
     };
     println!("{title}");
     if let Some(p) = parse_duration {
@@ -34,9 +34,19 @@ fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) {
     print!("{}", "Part 2: ".white());
     print!("{}", p2.as_str().bold().white());
     println!(" ({p2_duration:?})\n");
+    total_duration
 }
 
 fn main() {
-    run_day(1, day01::run, Red);
-    run_day(2, day02::run, Green);
+    let mut final_runtime = Duration::new(0, 0);
+    final_runtime += run_day(1, day01::run, Red);
+    final_runtime += run_day(2, day02::run, Green);
+    print!("{}", format!("Final Runtime: ").bold().white());
+    if final_runtime < Duration::new(0, 800_000_000) {
+        println!("{}", format!("{final_runtime:?}\n").bold().green());
+    } else if final_runtime < Duration::new(0, 0) {
+        println!("{}", format!("{final_runtime:?}\n").bold().yellow());
+    } else {
+        println!("{}", format!("{final_runtime:?}\n").bold().red());
+    }
 }
