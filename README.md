@@ -7,10 +7,10 @@ As usual, my goal is to run all days in under 1 second total run-time. I deliber
 
 Only days with both solutions are shown.
 
-| Day       | Intel i5 | Apple M2 |
-|-----------|----------|----------|
-| 01        | 561.1µs  |          |
-| **Total** | 561.1µs  |          |
+| Day       | Intel i5 | Apple M2  |
+|-----------|----------|-----------|
+| 01        | 561.1µs  | 503.834µs |
+| **Total** | 561.1µs  | 503.834µs |
 
 ## Lessons Learned
 
