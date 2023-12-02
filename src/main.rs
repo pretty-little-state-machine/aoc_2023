@@ -3,23 +3,24 @@ mod day01;
 use colored::Color::{Green, Red};
 use colored::*;
 use std::fs;
-use std::time::Instant;
+use std::time::Duration;
 
-fn run_day(day: usize, func: fn(&str) -> (String, String), color: Color) {
+type DayResult = ((String, Duration), (String, Duration));
+
+fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) {
     // Load the file before calling the function for accurate timing
     let contents =
         fs::read_to_string(format!("./input/day_{:0>2}.txt", day)).expect("File not found.");
 
-    let start = Instant::now();
-    let (p1, p2) = func(&contents);
-    let duration = start.elapsed();
+    let ((p1, p1_duration), (p2, p2_duration)) = func(&contents);
+    let total_duration = p1_duration + p2_duration;
 
     let title = match color {
-        Red => format!("🎄Day {day} 🎄\n~~~~~~~~~~").bright_red(),
-        Green => format!("🎄Day {day} 🎄\n~~~~~~~~~~").bright_green(),
-        _ => format!("🎄Day {day} 🎄\n~~~~~~~~~~").white(),
+        Red => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").bright_red(),
+        Green => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").bright_green(),
+        _ => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~").white(),
     };
-    println!("{title}\n{duration:?}\nPart 1: {p1}\nPart 2: {p2}\n");
+    println!("{title}\nPart 1: {p1} ({p1_duration:?})\nPart 2: {p2} ({p2_duration:?})\n");
 }
 
 fn main() {

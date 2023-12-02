@@ -1,30 +1,51 @@
+use crate::DayResult;
 use rayon::prelude::*;
+use std::time::Instant;
 
-pub fn run(input: &str) -> (String, String) {
-    (part_1(input).to_string(), part_2(input).to_string())
+pub fn run(input: &str) -> DayResult {
+    let start = Instant::now();
+    let p1 = part_1(input).to_string();
+    let p1_duration = start.elapsed();
+
+    let start = Instant::now();
+    let p2 = part_2(input).to_string();
+    let p2_duration = start.elapsed();
+    ((p1, p1_duration), (p2, p2_duration))
 }
 
+#[inline(always)]
 fn part_1(input: &str) -> usize {
     input.par_lines().map(get_line_value).sum()
 }
 
+#[inline(always)]
 fn part_2(input: &str) -> usize {
-    input.par_lines().map(|l| get_line_value(replace_words(l).as_str())).sum()
+    input
+        .par_lines()
+        .map(|l| get_line_value(replace_words(l).as_str()))
+        .sum()
 }
 
 /// Finds the first and last digits within a line and creates a two-digit number from them.
+#[inline(always)]
 fn get_line_value(input: &str) -> usize {
-    let mut values = Vec::new();
-    for c in input.chars() {
-        if let Ok(usize) = c.to_string().parse::<usize>() {
-            values.push(usize)
+    let mut first = 0;
+    let mut last = 0;
+    for mut c in input.bytes() {
+        c -= 48;
+        if c <= 9 {
+            last = c;
+            if first == 0 {
+                first = c;
+            }
         }
     }
-    values.first().unwrap() * 10 + values.last().unwrap()
+    first as usize * 10 + last as usize
 }
 
 /// We replace words with a number, but we MUST keep the first and last letters in case there are
 /// words like `oneeight` or `eightwo`. Sneaky for day 1!
+#[inline(always)]
 fn replace_words(input: &str) -> String {
     input
         .replace("one", "o1e")

@@ -9,8 +9,8 @@ Only days with both solutions are shown.
 
 | Day       | Intel i5 | Apple M2 |
 |-----------|----------|----------|
-| 01        | 1.3944ms |          |
-| **Total** | 1.3944ms |          |
+| 01        | 561.1µs  |          |
+| **Total** | 561.1µs  |          |
 
 ## Lessons Learned
 
