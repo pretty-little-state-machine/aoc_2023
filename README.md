@@ -7,11 +7,20 @@ As usual, my goal is to run all days in under 1 second total run-time. I deliber
 
 Only days with both solutions are shown.
 
-| Day       | Result  | 
-|-----------|---------|
-| 01        | 561.1µs |
-| 02        | 195.5µs |
-| **Total** | 756.6µs |
+```
+🎄Day 1 (584.1µs) 🎄
+~~~~~~~~~~~~~~~~~~~~~
+Part 1: 55488 (215.5µs)
+Part 2: 55614 (368.6µs)
+
+🎄Day 2 (200.8µs) 🎄
+~~~~~~~~~~~~~~~~~~~~~
+Parse : (192.1µs)
+Part 1: 2685 (4.9µs)
+Part 2: 83707 (3.8µs)
+
+Final Runtime: 784.9µs
+```
 
 ## Lessons Learned
 
