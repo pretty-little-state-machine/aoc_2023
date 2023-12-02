@@ -1,16 +1,17 @@
 # Advent of Code 2023
 
-As usual, my goal is to run all days in under 1 second total run-time. I deliberately do not include file loads from disk since that varies wildly from machine to machine. This year I am also going to run everything twice, once on my coffee lake i5 desktop and secondly on my Macbook Air M2. 
+As usual, my goal is to run all days in under 1 second total run-time. I deliberately do not include file loads from disk since that varies wildly from machine to machine.
 
 
 ## Benchmarks
 
 Only days with both solutions are shown.
 
-| Day       | Intel i5 | Apple M2  |
-|-----------|----------|-----------|
-| 01        | 561.1µs  | 503.834µs |
-| **Total** | 561.1µs  | 503.834µs |
+| Day       | Result  | 
+|-----------|---------|
+| 01        | 561.1µs |
+| 01        | 195.5µs |
+| **Total** | 756.6µs |
 
 ## Lessons Learned
 

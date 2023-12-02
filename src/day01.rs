@@ -10,7 +10,7 @@ pub fn run(input: &str) -> DayResult {
     let start = Instant::now();
     let p2 = part_2(input).to_string();
     let p2_duration = start.elapsed();
-    ((p1, p1_duration), (p2, p2_duration))
+    (None, (p1, p1_duration), (p2, p2_duration))
 }
 
 #[inline(always)]
