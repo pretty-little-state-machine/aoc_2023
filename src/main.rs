@@ -1,5 +1,8 @@
+extern crate core;
+
 mod day01;
 mod day02;
+mod day03;
 
 use colored::Color::{Green, Red};
 use colored::*;
@@ -21,7 +24,9 @@ fn run_day(day: usize, func: fn(&str) -> DayResult, color: Color) -> Duration {
 
     let title = match color {
         Red => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").bright_red(),
-        Green => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").bright_green(),
+        Green => {
+            format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").bright_green()
+        }
         _ => format!("🎄Day {day} ({total_duration:?}) 🎄\n~~~~~~~~~~~~~~~~~~~~~").white(),
     };
     println!("{title}");
@@ -41,7 +46,9 @@ fn main() {
     let mut final_runtime = Duration::new(0, 0);
     final_runtime += run_day(1, day01::run, Red);
     final_runtime += run_day(2, day02::run, Green);
-    print!("{}", format!("Final Runtime: ").bold().white());
+    final_runtime += run_day(3, day03::run, Red);
+
+    print!("{}", "Final Runtime: ".to_string().bold().white());
     if final_runtime < Duration::new(0, 800_000_000) {
         println!("{}", format!("{final_runtime:?}\n").bold().green());
     } else if final_runtime < Duration::new(0, 0) {
