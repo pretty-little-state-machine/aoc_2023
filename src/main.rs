@@ -3,6 +3,7 @@ extern crate core;
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 use colored::Color::{Green, Red};
 use colored::*;
@@ -47,6 +48,7 @@ fn main() {
     final_runtime += run_day(1, day01::run, Red);
     final_runtime += run_day(2, day02::run, Green);
     final_runtime += run_day(3, day03::run, Red);
+    final_runtime += run_day(4, day04::run, Green);
 
     print!("{}", "Final Runtime: ".to_string().bold().white());
     if final_runtime < Duration::new(0, 800_000_000) {

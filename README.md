@@ -8,24 +8,30 @@ As usual, my goal is to run all days in under 1 second total run-time. I deliber
 Only days with both solutions are shown.
 
 ```
-🎄Day 1 (501.7µs) 🎄
+🎄Day 1 (829.2µs) 🎄
 ~~~~~~~~~~~~~~~~~~~~~
-Part 1: 55488 (215.6µs)
-Part 2: 55614 (286.1µs)
+Part 1: 55488 (262.7µs)
+Part 2: 55614 (566.5µs)
 
-🎄Day 2 (252.9µs) 🎄
+🎄Day 2 (205.5µs) 🎄
 ~~~~~~~~~~~~~~~~~~~~~
-Parse : (243.7µs)
-Part 1: 2685 (5.4µs)
+Parse : (196.7µs)
+Part 1: 2685 (5µs)
 Part 2: 83707 (3.8µs)
 
-🎄Day 3 (2.2025ms) 🎄
+🎄Day 3 (2.3513ms) 🎄
 ~~~~~~~~~~~~~~~~~~~~~
-Parse : (1.6353ms)
-Part 1: 557705 (436.7µs)
-Part 2: 84266818 (130.5µs)
+Parse : (1.6582ms)
+Part 1: 557705 (544.2µs)
+Part 2: 84266818 (148.9µs)
 
-Final Runtime: 2.9571ms
+🎄Day 4 (390.3µs) 🎄
+~~~~~~~~~~~~~~~~~~~~~
+Parse : (307.9µs)
+Part 1: 20117 (39.3µs)
+Part 2: 13768818 (43.1µs)
+
+Final Runtime: 3.7763ms
 ```
 
 ## Lessons Learned
