@@ -1,8 +1,6 @@
 use crate::DayResult;
 use std::time::Instant;
 
-extern crate test;
-
 pub fn run(input: &str) -> DayResult {
     let start = Instant::now();
     let games: Vec<GameResults> = parse_games(input);

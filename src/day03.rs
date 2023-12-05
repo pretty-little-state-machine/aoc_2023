@@ -191,23 +191,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_build_schematic() {
-        let (schematic, parts) = parse_schematic(
-            "467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..",
-        );
-        println!("schematic: {schematic:?}");
-    }
-
-    #[test]
     fn test_part_1() {
         let (schematic, parts) = parse_schematic(
             "467..114..
