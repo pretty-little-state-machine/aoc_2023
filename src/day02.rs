@@ -1,6 +1,8 @@
 use crate::DayResult;
 use std::time::Instant;
 
+extern crate test;
+
 pub fn run(input: &str) -> DayResult {
     let start = Instant::now();
     let games: Vec<GameResults> = parse_games(input);
@@ -40,26 +42,25 @@ impl GameResults {
 
 impl GameResults {
     fn new(input: &str) -> Self {
-        let fields = input.split(": ").collect::<Vec<&str>>();
+        let mut fields = input.split(": ");
         let id = fields
-            .first()
+            .next()
             .unwrap()
             .split(' ')
-            .collect::<Vec<&str>>()
             .last()
             .unwrap()
             .parse::<usize>()
             .unwrap();
 
         let mut counts: Vec<CubeCounts> = Vec::new();
-        for run in fields.last().unwrap().split("; ").collect::<Vec<&str>>() {
+        for run in fields.next().unwrap().split("; ") {
             let mut red = 0;
             let mut blue = 0;
             let mut green = 0;
             for entry in run.split(", ") {
-                let values = entry.split(' ').collect::<Vec<&str>>();
-                let count = values.first().unwrap().parse::<usize>().unwrap();
-                match *values.last().unwrap() {
+                let mut values = entry.split(' ');
+                let count = values.next().unwrap().parse::<usize>().unwrap();
+                match values.next().unwrap() {
                     "red" => red += count,
                     "blue" => blue += count,
                     "green" => green += count,

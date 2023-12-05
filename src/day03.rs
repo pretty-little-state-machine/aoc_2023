@@ -1,5 +1,5 @@
 use crate::DayResult;
-use fxhash::{FxHashMap, FxHashSet};
+use fxhash::{FxBuildHasher, FxHashMap, FxHashSet};
 use std::time::Instant;
 
 pub fn run(input: &str) -> DayResult {
@@ -47,12 +47,11 @@ fn get_part_value(decoder: &[usize]) -> usize {
 }
 
 fn parse_schematic(input: &str) -> (Schematic, Parts) {
-    let mut schematic = Schematic::default();
-    let mut parts = Parts::default();
+    let mut schematic = Schematic::with_capacity_and_hasher(5000, FxBuildHasher::default());
+    let mut parts = Parts::with_capacity_and_hasher(500, FxBuildHasher::default());
 
-    let mut part = Part::default();
     let mut part_id: usize = 0;
-    let mut part_decoder: Vec<usize> = Vec::default();
+    let mut part_decoder: Vec<usize> = Vec::with_capacity(100);
 
     for (y, line) in input.lines().enumerate() {
         for (x, cell) in line.chars().enumerate() {
@@ -63,7 +62,6 @@ fn parse_schematic(input: &str) -> (Schematic, Parts) {
             match cell {
                 '0'..='9' => {
                     if part_decoder.is_empty() {
-                        part = Part::default();
                         part_id += 1;
                     }
                     part_decoder.push(cell.to_string().parse::<usize>().unwrap());
@@ -84,8 +82,12 @@ fn parse_schematic(input: &str) -> (Schematic, Parts) {
                 }
             }
             if flush_decoder && !part_decoder.is_empty() {
-                part.value = get_part_value(&part_decoder);
-                parts.insert(part_id, part);
+                parts.insert(
+                    part_id,
+                    Part {
+                        value: get_part_value(&part_decoder),
+                    },
+                );
                 part_decoder.clear();
             }
         }
@@ -187,6 +189,23 @@ fn part_2(schematic: &Schematic, parts: &Parts) -> usize {
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
+
+    #[test]
+    fn test_build_schematic() {
+        let (schematic, parts) = parse_schematic(
+            "467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..",
+        );
+        println!("schematic: {schematic:?}");
+    }
 
     #[test]
     fn test_part_1() {

@@ -4,7 +4,11 @@ use std::time::Instant;
 
 pub fn run(input: &str) -> DayResult {
     let start = Instant::now();
-    let cards: Vec<Scratchcard> = input.lines().map(Scratchcard::new).collect();
+    let mut cards = Vec::with_capacity(250);
+    input
+        .lines()
+        .map(Scratchcard::new)
+        .for_each(|c| cards.push(c));
     let parse_duration = start.elapsed();
 
     let start = Instant::now();
@@ -26,19 +30,20 @@ struct Scratchcard {
 
 impl Scratchcard {
     fn new(input: &str) -> Self {
-        let fields: Vec<&str> = input.split(|c: char| c.is_ascii_punctuation()).collect();
+        let mut fields = input.split(|c: char| c.is_ascii_punctuation());
+        let id = fields
+            .next()
+            .unwrap()
+            .split(' ')
+            .last()
+            .unwrap()
+            .parse::<usize>()
+            .unwrap();
+
         Self {
-            id: fields
-                .first()
-                .unwrap()
-                .split(' ')
-                .collect::<Vec<&str>>()
-                .last()
-                .unwrap()
-                .parse::<usize>()
-                .unwrap(),
-            revealed_numbers: num_columns_to_set(fields.get(1).unwrap().trim()),
-            winning_numbers: num_columns_to_set(fields.get(2).unwrap().trim()),
+            id,
+            revealed_numbers: num_columns_to_set(fields.next().unwrap().trim()),
+            winning_numbers: num_columns_to_set(fields.next().unwrap().trim()),
         }
     }
 
@@ -57,8 +62,7 @@ impl Scratchcard {
     fn num_matches(&self) -> usize {
         self.revealed_numbers
             .intersection(&self.winning_numbers)
-            .collect::<Vec<&usize>>()
-            .len()
+            .count()
     }
 }
 
