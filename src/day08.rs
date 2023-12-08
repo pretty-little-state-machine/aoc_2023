@@ -2,6 +2,7 @@ use crate::day08::Step::{Left, Right};
 use crate::DayResult;
 use fxhash::FxHashMap;
 use num::Integer;
+use rayon::prelude::*;
 use std::time::Instant;
 
 pub fn run(input: &str) -> DayResult {
@@ -17,7 +18,6 @@ pub fn run(input: &str) -> DayResult {
     let p2 = part_2(&map, &steps).to_string();
     let p2_duration = start.elapsed();
     (Some(parse_duration), (p1, p1_duration), (p2, p2_duration))
-    //(None, (p1, p1_duration), (p2, p2_duration))
 }
 
 type Map = FxHashMap<String, Entry>;
@@ -75,19 +75,19 @@ fn parse(input: &str) -> (Map, Steps) {
     (map, steps)
 }
 
-fn part_1(map: &Map, steps: &Steps) -> usize {
-    let mut total_steps = 0;
+/// Returns the steps required to reach the destination
+fn find_path_steps(source: String, map: &Map, steps: &Steps, part_2: bool) -> usize {
     let step_length = steps.len();
-    let mut current = "AAA".to_string();
+    let mut current = source;
     let mut step_cursor = 0;
-
+    let mut total_steps = 0;
     while let Some(entry) = map.get(&current) {
         let destination = match &steps[step_cursor] {
             Left => entry.left.clone(),
             Right => entry.right.clone(),
         };
         total_steps += 1;
-        if destination == "ZZZ" {
+        if (!part_2 && destination.contains("ZZZ")) || (part_2 && destination.ends_with('Z')) {
             break;
         }
         current = destination;
@@ -97,57 +97,20 @@ fn part_1(map: &Map, steps: &Steps) -> usize {
     total_steps
 }
 
-/// Returns the next entry in a map
-fn step_through_map(source: String, map: &Map, step: &Step) -> String {
-    let entry = map.get(&source).unwrap();
-    match step {
-        Left => entry.left.clone(),
-        Right => entry.right.clone(),
-    }
+fn part_1(map: &Map, steps: &Steps) -> usize {
+    find_path_steps("AAA".to_string(), map, steps, false)
 }
 
 fn part_2(map: &Map, steps: &Steps) -> usize {
-    let mut current_entries = map
+    let results = map
         .values()
         .filter(|&e| e.source.ends_with('A'))
-        .collect::<Vec<_>>();
-    let mut destinations = Vec::with_capacity(current_entries.len());
-    let mut steps_per_starting: FxHashMap<String, usize> = FxHashMap::default();
-    let step_length = steps.len();
+        .collect::<Vec<_>>()
+        .par_iter()
+        .map(|e| find_path_steps(e.source.clone(), map, steps, true))
+        .collect::<Vec<usize>>();
 
-    let mut total_steps = 0;
-    let mut step_cursor = 0;
-
-    loop {
-        total_steps += 1;
-        for entry in &current_entries {
-            destinations.push(step_through_map(
-                entry.source.clone(),
-                map,
-                &steps[step_cursor],
-            ));
-        }
-        step_cursor += 1;
-        step_cursor %= step_length;
-        current_entries.clear();
-        for destination in &destinations {
-            if destination.ends_with('Z') {
-                steps_per_starting.insert(destination.clone(), total_steps);
-            } else {
-                current_entries.push(map.get(destination).unwrap());
-            }
-        }
-        destinations.clear();
-        if current_entries.is_empty() {
-            break;
-        }
-    }
-    let values = steps_per_starting.values().copied().collect::<Vec<usize>>();
-    let mut lcm = 1;
-    for v in values {
-        lcm = lcm.lcm(&v);
-    }
-    lcm
+    results.iter().fold(1, |acc, r| acc.lcm(r))
 }
 
 #[cfg(test)]
