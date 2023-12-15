@@ -2,7 +2,7 @@ use crate::day10::PipeKind::{
     Ground, Horizontal, NorthEast, NorthWest, SouthEast, SouthWest, Start, Vertical,
 };
 use crate::DayResult;
-use colored::Color::{BrightBlue, White};
+use colored::Color::{BrightBlue, Red, White};
 use colored::Colorize;
 use fxhash::FxHashMap;
 use itertools::Itertools;
@@ -30,7 +30,7 @@ type PipeNetwork = FxHashMap<Point, Pipe>;
 struct Pipe {
     kind: PipeKind,
     visited: bool,
-    filled: bool,
+    internal: bool,
 }
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
@@ -81,6 +81,8 @@ fn draw_network(network: &PipeNetwork) {
         };
         if pipe.visited {
             print!("{}", c.to_string().color(BrightBlue));
+        } else if pipe.internal {
+            print!("{}", "▒".to_string().color(Red));
         } else {
             print!("{}", c.to_string().color(White));
         }
@@ -98,7 +100,7 @@ fn parse_network(input: &str) -> PipeNetwork {
                 Pipe {
                     kind: PipeKind::new(c),
                     visited: false,
-                    filled: false,
+                    internal: false,
                 },
             );
         }
@@ -221,13 +223,69 @@ fn part_1(network: &mut PipeNetwork) -> isize {
         total_steps += 1;
         current_hop = x;
     }
-    draw_network(network);
+    // draw_network(network);
     total_steps / 2
 }
 
 /// Part 2 requires the traversal in Part 1 to be complete.
 fn part_2(network: &mut PipeNetwork) -> usize {
-    0
+    let scan_network = network.clone();
+    let pipes = network.iter_mut().sorted_by_key(|(k, _v)| (k.0, k.1));
+    let mut cur_row: isize = 0;
+
+    let mut internal_pipes = 0;
+    let mut outside_edge = true;
+
+    for ((row, col), pipe) in pipes {
+        if *row > cur_row {
+            cur_row = *row;
+            outside_edge = true;
+        }
+        let mut col_offset: isize = 1;
+        let mut crossings = 0;
+        let mut prev_pipe_visited = pipe.visited;
+        let mut prev_pipe_kind = pipe.kind;
+        while let Some(next_pipe) = scan_network.get(&(cur_row, col + col_offset)) {
+            // If we hit an `╔` or `╚` pipe then it's possible to travel down the network for a bit
+            // before leaving the intersection again since we are scanning eastwards. Only by
+            // hitting a `╗` or `╝` pipe can we consider the horizontal span finished.
+            match next_pipe.kind {
+                NorthWest | SouthWest => {
+                    if next_pipe.visited {
+                        if prev_pipe_visited && prev_pipe_kind == NorthEast && next_pipe.kind == NorthWest {
+                            crossings += 1;
+
+                        } else if prev_pipe_visited && prev_pipe_kind == SouthEast && next_pipe.kind == SouthWest {
+                            crossings += 1;
+                        }
+                    }
+                }
+                NorthEast | SouthEast => {
+                    if next_pipe.visited {
+                        crossings += 1;
+                    }
+                },
+                Vertical=> {
+                    if next_pipe.visited {
+                        crossings += 1;
+                    }
+                },
+                _ => (),
+            }
+            prev_pipe_visited = next_pipe.visited;
+            prev_pipe_kind = next_pipe.kind;
+            col_offset += 1;
+        }
+        if pipe.visited {
+            outside_edge = false;
+        }
+        if crossings % 2 != 0 && !pipe.visited && !outside_edge {
+            pipe.internal = true;
+            internal_pipes += 1;
+        }
+    }
+    draw_network(&network);
+    internal_pipes
 }
 
 #[cfg(test)]
@@ -258,17 +316,18 @@ LJ.LJ";
 
     #[test]
     fn test_part_2_example_1() {
-        let input = "...........
-.S-------7.
-.|F-----7|.
-.||.....||.
-.||.....||.
-.|L-7.F-J|.
-.|..|.|..|.
-.L--J.L--J.
-...........";
+        let input = "FF7FSF7F7F7F7F7F---7
+L|LJ||||||||||||F--J
+FL-7LJLJ||||||LJL-77
+F--JF--7||LJLJ7F7FJ-
+L---JF-JLJ.||-FJLJJ7
+|F|F-JF---7F7-L7L|7|
+|FFJF7L7F-JF7|JL---7
+7-L-JL7||F7|L7F-7F7|
+L.L7LFJ|||||FJL7||LJ
+L7JLJL-JLJLJL--JLJ.L";
         let mut network = parse_network(input);
         part_1(&mut network);
-        assert_eq!(part_2(&mut network), 8);
+        assert_eq!(part_2(&mut network), 10);
     }
 }
