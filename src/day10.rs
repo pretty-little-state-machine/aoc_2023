@@ -252,10 +252,15 @@ fn part_2(network: &mut PipeNetwork) -> usize {
             match next_pipe.kind {
                 NorthWest | SouthWest => {
                     if next_pipe.visited {
-                        if prev_pipe_visited && prev_pipe_kind == NorthEast && next_pipe.kind == NorthWest {
+                        if prev_pipe_visited
+                            && prev_pipe_kind == NorthEast
+                            && next_pipe.kind == NorthWest
+                        {
                             crossings += 1;
-
-                        } else if prev_pipe_visited && prev_pipe_kind == SouthEast && next_pipe.kind == SouthWest {
+                        } else if prev_pipe_visited
+                            && prev_pipe_kind == SouthEast
+                            && next_pipe.kind == SouthWest
+                        {
                             crossings += 1;
                         }
                     }
@@ -264,12 +269,12 @@ fn part_2(network: &mut PipeNetwork) -> usize {
                     if next_pipe.visited {
                         crossings += 1;
                     }
-                },
-                Vertical=> {
+                }
+                Vertical => {
                     if next_pipe.visited {
                         crossings += 1;
                     }
-                },
+                }
                 _ => (),
             }
             prev_pipe_visited = next_pipe.visited;
