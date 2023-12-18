@@ -245,6 +245,7 @@ fn part_2(network: &mut PipeNetwork) -> usize {
         let mut crossings = 0;
         let mut prev_pipe_visited = pipe.visited;
         let mut prev_pipe_kind = pipe.kind;
+        let mut traveling = false;
         while let Some(next_pipe) = scan_network.get(&(cur_row, col + col_offset)) {
             // If we hit an `╔` or `╚` pipe then it's possible to travel down the network for a bit
             // before leaving the intersection again since we are scanning eastwards. Only by
@@ -278,7 +279,9 @@ fn part_2(network: &mut PipeNetwork) -> usize {
                 _ => (),
             }
             prev_pipe_visited = next_pipe.visited;
-            prev_pipe_kind = next_pipe.kind;
+            if next_pipe.kind != Horizontal {
+                prev_pipe_kind = next_pipe.kind;
+            }
             col_offset += 1;
         }
         if pipe.visited {

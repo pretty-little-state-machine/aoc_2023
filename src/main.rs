@@ -11,7 +11,9 @@ mod day08;
 mod day09;
 mod day10;
 mod day11;
+mod day14;
 mod day15;
+mod helpers;
 
 use colored::Color::{Green, Red};
 use colored::*;
@@ -64,6 +66,7 @@ fn main() {
     final_runtime += run_day(9, day09::run, Red);
     // final_runtime += run_day(10, day10::run, Green);
     final_runtime += run_day(11, day11::run, Red);
+    final_runtime += run_day(14, day14::run, Green);
     final_runtime += run_day(15, day15::run, Red);
 
     print!("{}", "Final Runtime: ".to_string().bold().white());

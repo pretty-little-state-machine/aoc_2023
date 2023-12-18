@@ -67,7 +67,7 @@ fn calc_box_power(lenses: &LinkedList<Lens>, box_number: usize) -> usize {
 
 fn part_2(input: &str) -> usize {
     let mut boxes: Vec<LinkedList<Lens>> = Vec::with_capacity(257);
-    /// Boxes are 0-indexed.
+    // Boxes are 0-indexed.
     for _ in 0..256 {
         boxes.push(LinkedList::default());
     }
